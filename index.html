@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, height=device-height" />
+
+  <title>goTimeLock | Applied Cryptography</title>
+  <meta name="description" content="goTimeLock let's you encrypt data to the future." />
+  <meta name="keywords"
+    content="applied cryptography, encryption, cryptographic protocols, cybersecurity education, project, encryption" />
+  <meta name="author" content="Raphael Tannous" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://gotimelock.appliedcryptography.me/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="goTimeLock | Applied Cryptography" />
+  <meta property="og:description" content="goTimeLock let's you encrypt data to the future." />
+  <meta property="og:url" content="https://gotimelock.appliedcryptography.me" />
+  <meta property="og:locale" content="en_US" />
+
+  <link rel="icon" href="images/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="images/favicon.png" sizes="180x180" />
+  <link rel="preload" as="font" type="font/woff2"
+    href="fonts/google/inriaserif/v18/fC14PYxPY3rXxEndZJAzN3wQUjjCjl2PaGxM.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2"
+    href="fonts/google/inriaserif/v18/fC1nPYxPY3rXxEndZJAzN3SuRy_lq3KnYmQ.woff2" crossorigin />
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/highlight.css">
+  <link rel="stylesheet" href="fonts/phosphor/phosphor.css" />
+  <link rel="stylesheet" href="fonts/google/google.css" />
+
+  <script src="js/wasm_exec.js"></script>
+  <script type="module" src="js/wasm_run.js" defer></script>
+  <script type="module" src="js/main.js" defer></script>
+</head>
+
+<body>
+  <a href="https://palestinebanner.com/click" style="
+  box-sizing:border-box;display:flex;align-items:center;
+  justify-content:center;gap:12px;width:100%;padding:15px 20px;
+  background:#000;color:#75e39b;text-decoration:none;text-align:center;
+  font:600 14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 60 30" aria-hidden="true"
+      style="display:block;flex-shrink:0;outline:1px solid #ffffff30;">
+      <path fill="#000" d="M0 0h60v10H0z" />
+      <path fill="#fff" d="M0 10h60v10H0z" />
+      <path fill="#149454" d="M0 20h60v10H0z" />
+      <path fill="#e6443f" d="m0 0 30 15L0 30z" />
+    </svg>
+    <span>Freedom, dignity, and justice for Palestinians.</span>
+    <span aria-hidden="true" style="flex-shrink:0;">&#8599;</span>
+  </a>
+
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="#" class="navbar-logo">goTimeLock</a>
+      <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <div class="navbar-links">
+        <a href="#how-it-works">How it Works</a>
+        <a href="#changelog">Changelog</a>
+      </div>
+    </div>
+
+    <div id="progress-bar-outer">
+      <div id="progress-bar-inner"></div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <section class="section">
+      <div class="subsection">
+        <h3 class="subsection-title"><i class="icon ph-duotone ph-text-align-left"></i>Text Encryption</h3>
+
+        <div class="card card-highlight">
+          <h4 class="mb-2"><i class="icon ph-duotone ph-lock-key-open"></i>Plaintext</h4>
+
+          <textarea id="plaintext" class="mb-3 encryption-textarea" placeholder="Enter your plaintext here..."
+            rows=4></textarea>
+
+          <label for="decryption-time-picker" class="date-picker-label">
+            <i class="icon ph-duotone ph-calendar-blank"></i>
+            Select Decryption Time
+          </label>
+
+          <input type="datetime-local" id="decryption-time-picker" class="future-date-picker mb-3 mt-3" required />
+
+          <div class="align-center justify-column">
+            <button id="encrypt-btn" class="cal-event-btn" data-primary="true">Encrypt</button>
+            <p id="encrypt-error" class="mb-0 alert"></p>
+          </div>
+        </div>
+        <div class="card card-highlight">
+          <h4 class="mb-2"><i class="icon ph-duotone ph-lock-key"></i>Ciphertext</h4>
+
+          <textarea id="ciphertext" class="encryption-textarea mb-3" placeholder="Enter your armor ciphertext..."
+            rows="4"></textarea>
+
+          <div class="align-center justify-column">
+            <button id="decrypt-btn" class="cal-event-btn" data-primary="true">Decrypt</button>
+            <p id="decrypt-error" class="mb-0 alert"></p>
+          </div>
+        </div>
+    </section>
+
+
+    <section id="how-it-works" class="section">
+      <div class="section-header">
+        <h2 class="section-title">How it Works?</h2>
+      </div>
+
+
+      <div class="subsection">
+        <h3 class="subsection-title"><i class="icon ph-duotone ph-tree-structure"></i>Structure</h3>
+        <div class="card">
+          <div class="book-display">
+            <img src="images/drand.png" alt="Drand Logo" class="drand-image" loading="lazy" />
+            <div>
+              <h4 class="mb-2"><i class="icon ph-duotone ph-graph"></i>Drand Network</h4>
+              <p>
+                Quoting <a href="https://docs.drand.love/about/" target="_blank">drand.love</a>:
+
+                &ldquo;drand (lower case, pronounced "DEE-rand") is a distributed randomness beacon daemon written in
+                the Go
+                programming language. It generates collective, publicly verifiable, unbiased, and unpredictable random
+                values at fixed intervals using advanced cryptographic techniques.&rdquo;
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="book-display">
+            <img src="images/league-of-entropy.avif" alt="League of Entropy Logo" class="league-of-entropy-image"
+              loading="lazy" />
+            <div>
+              <h4 class="mb-2"><i class="icon ph-duotone ph-shield-star"></i>League of Entropy</h4>
+              <p>
+                The League of Entropy is a voluntary consortium, that runs drand, to provide publicly verifiable,
+                unbiased, and unpredictable randomness. The consortium consits of big companys like <a
+                  href="https://cloudflare.com" target="_blank">Cloudflare</a>, <a href="https://ethereum.foundation/"
+                  target="_blank">Ethereum Foundation</a>, and <a href="https://drand.love/" target="_blank">more</a>
+                where they use drand to publish randomness.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title"><i class="icon ph-duotone ph-gear"></i>Drand Network Modes</h3>
+
+        <div class="card">
+          <h4 class="mb-2"><i class="icon ph-duotone ph-link"></i>Network in Chain Mode</h4>
+          <p>
+            In chain mode, each round depends on the previous round, which mean that you can't predict future rounds'
+            message.
+          </p>
+          <div class="card-image">
+            <img class="only-on-dark" src="images/drand-chained-mode-dark.png" alt="Drand default chain mode" />
+            <img class="only-on-light" src="images/drand-chained-mode-light.png" alt="Drand default chain mode" />
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 class="mb-2"><i class="icon ph-duotone ph-link-break"></i>Network in Unchained Mode</h4>
+          <p>
+            In unchained mode, each round does not depend on the previous round, which mean that you can predict future
+            rounds' message.
+          </p>
+          <div class="card-image">
+            <img class="only-on-dark" src="images/drand-unchained-mode-dark.png" alt="Drand default chain mode" />
+            <img class="only-on-light" src="images/drand-unchained-mode-light.png" alt="Drand default chain mode" />
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 class="mb-2"><i class="icon ph-duotone ph-shield-star"></i>The League of Entropy's Networks</h4>
+          <p>
+            There are three networks that we can access their randomness from the League of Entropy's endpoints:
+          </p>
+
+          <ol>
+            <li>
+              <code>default</code> network, which runs in chained mode and interests us for the <a
+                href="https://goloto.appliedcryptography.me" target="_blank">LOTO</a> system.
+            </li>
+            <li>
+              <code>quicknet</code> network, which runs in unchained mode and help us to create time-lock encrypted
+              messages.
+            </li>
+            <li>
+              <code>evmnet</code> network, which runs in unchained mode for code that runs in the
+              <a href="https://ethereum.org/developers/docs/evm/" target="_blank">EVM</a>.
+            </li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <h4 class="mb-2"><i class="icon ph-duotone ph-link"></i>The <code>quicknet</code> Network</h4>
+          <p>
+            TODO :)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="changelog" class="section">
+      <div class="subsection">
+        <h3 class="subsection-title"><i class="icon ph-duotone ph-scroll"></i>Changelog</h3>
+        <div class="card card-highlight">
+          <strong><i class="icon ph-duotone ph-tag"></i><a
+              href="https://codeberg.org/raphaeltannous/goTimeLock/src/tag/v0.1.0">v0.1.0</a> (WASM size:
+            ~12MB):</strong>
+          <ul>
+            <li>
+              Command-line tool (<code>cmd/goTimeLock</code>).
+            </li>
+            <li>
+              WASM frontend (<code>cmd/wasm</code>).
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="container ">
+      <p>
+        Made with ❤️ using Go.
+      </p>
+      <p>
+        <a href="https://codeberg.org/raphaeltannous/goTimeLock">Go source code</a> is under the MIT license.
+      </p>
+    </div>
+  </footer>
+</body>
+
+</html>
