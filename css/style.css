@@ -2404,6 +2404,9 @@ p>a.btn {
 	border: 1px solid var(--border);
 	border-radius: var(--radius);
 
+	-webkit-appearance: none;
+	appearance: none;
+
 	box-shadow: var(--shadow);
 	color-scheme: light;
 	transition: var(--transition), box-shadow var(--duration) var(--ease);
