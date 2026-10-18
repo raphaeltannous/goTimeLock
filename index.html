@@ -106,6 +106,28 @@
             <p id="decrypt-error" class="mb-0 alert"></p>
           </div>
         </div>
+
+        <h3 class="subsection-title"><i class="icon ph-duotone ph-file"></i>File Encryption</h3>
+
+        <div class="card card-highlight">
+          <div class="align-center justify-column">
+            <input type="file" id="file-input" class="file-input-btn mb-3" />
+
+            <label for="file-decryption-time-picker" class="date-picker-label mb-0">
+              <i class="icon ph-duotone ph-calendar-blank"></i>
+              Select Decryption Time
+            </label>
+
+            <input type="datetime-local" id="file-decryption-time-picker" class="future-date-picker mb-3 mt-3"
+              required />
+
+            <div>
+              <button id="file-encrypt-btn" class="cal-event-btn" data-primary="true">Encrypt</button>
+              <button id="file-decrypt-btn" class="cal-event-btn">Decrypt</button>
+            </div>
+            <p id="file-encrypt-decrypt-error" class="mb-0 alert"></p>
+          </div>
+        </div>
     </section>
 
 
@@ -213,6 +235,33 @@
       <div class="subsection">
         <h3 class="subsection-title"><i class="icon ph-duotone ph-scroll"></i>Changelog</h3>
         <div class="card card-highlight">
+          <strong><i class="icon ph-duotone ph-tag"></i><a
+              href="https://codeberg.org/raphaeltannous/goTimeLock/src/tag/v0.2.0">v0.2.0</a>:</strong>
+          <ul>
+            <li>
+              <strong>cmd/goTimeLock:</strong>
+              <ul>
+                <li>
+                  Update usage.
+                </li>
+                <li>
+                  Refactor.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>cmd/wasm:</strong>
+              <ul>
+                <li>
+                  Add file encryption option.
+                </li>
+                <li>
+                  Refactor.
+                </li>
+              </ul>
+            </li>
+          </ul>
+
           <strong><i class="icon ph-duotone ph-tag"></i><a
               href="https://codeberg.org/raphaeltannous/goTimeLock/src/tag/v0.1.0">v0.1.0</a> (WASM size:
             ~12MB):</strong>

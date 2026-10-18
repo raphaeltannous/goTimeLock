@@ -457,6 +457,10 @@ hr {
 	margin: auto;
 }
 
+.justify-column .date-picker-label {
+	align-self: start;
+}
+
 .justify-column p {
 	margin-top: 0.5rem;
 	padding: 0 .5rem 0 .5rem;
@@ -1840,6 +1844,7 @@ p>a.btn {
 	align-self: center;
 }
 
+.file-input-btn::file-selector-button,
 .cal-event-btn {
 	font-family: inherit;
 	font-size: 0.78rem;
