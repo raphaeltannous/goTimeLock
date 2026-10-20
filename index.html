@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, height=device-height" />
 
   <title>goTimeLock | Applied Cryptography</title>
-  <meta name="description" content="goTimeLock let's you encrypt data to the future." />
+  <meta name="description" content="goTimeLock lets you encrypt data to the future." />
   <meta name="keywords"
     content="applied cryptography, encryption, cryptographic protocols, cybersecurity education, project, encryption" />
   <meta name="author" content="Raphael Tannous" />
@@ -15,7 +15,7 @@
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="goTimeLock | Applied Cryptography" />
-  <meta property="og:description" content="goTimeLock let's you encrypt data to the future." />
+  <meta property="og:description" content="goTimeLock lets you encrypt data to the future." />
   <meta property="og:url" content="https://gotimelock.appliedcryptography.me" />
   <meta property="og:locale" content="en_US" />
 
@@ -73,9 +73,23 @@
   </nav>
 
   <div class="container">
+    <p class="subtitle mt-3 mb-0">
+      Compatible with <a href="https://github.com/drand/tlock">drand/tlock</a>.
+    </p>
     <section class="section">
       <div class="subsection">
-        <h3 class="subsection-title"><i class="icon ph-duotone ph-text-align-left"></i>Text Encryption</h3>
+        <h3 class="subsection-title">
+          <i class="icon ph-duotone ph-text-align-left"></i>
+          Text Encryption
+          <span class="subtitle mt-2">
+            <span id="wasm-status" class="alert">
+              <i id="wasm-status-icon" class="icon ph-duotone ph-spinner-gap"></i>
+              <span id="wasm-status-text">
+                Fetching WASM...
+              </span>
+            </span>
+          </span>
+        </h3>
 
         <div class="card card-highlight">
           <h4 class="mb-2"><i class="icon ph-duotone ph-lock-key-open"></i>Plaintext</h4>
@@ -88,7 +102,7 @@
             Select Decryption Time
           </label>
 
-          <input type="datetime-local" id="decryption-time-picker" class="future-date-picker mb-3 mt-3" required />
+          <input type="datetime-local" id="decryption-time-picker" class="future-date-picker mb-3 mt-3" step="1" />
 
           <div class="align-center justify-column">
             <button id="encrypt-btn" class="cal-event-btn" data-primary="true">Encrypt</button>
@@ -119,7 +133,7 @@
             </label>
 
             <input type="datetime-local" id="file-decryption-time-picker" class="future-date-picker mb-3 mt-3"
-              required />
+              step="1" />
 
             <div>
               <button id="file-encrypt-btn" class="cal-event-btn" data-primary="true">Encrypt</button>
@@ -128,6 +142,10 @@
             <p id="file-encrypt-decrypt-error" class="mb-0 alert"></p>
           </div>
         </div>
+
+        <p class="subtitle mt-3 mb-0">
+          You can have automatic decryption with <a href="https://paste.appliedcryptography.me">goTimeLockPaste</a>.
+        </p>
     </section>
 
 
@@ -225,7 +243,43 @@
         <div class="card">
           <h4 class="mb-2"><i class="icon ph-duotone ph-link"></i>The <code>quicknet</code> Network</h4>
           <p>
-            TODO :)
+            Each network has a chain hash that acts as an identifier for the network. The chain hash for the
+            <code>quicknet</code> network is
+            <code>52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971</code>.
+          </p>
+          <p>
+            We can query the network by performing an HTTP request, either by the network's id or the network's chain
+            hash, to the <a href="https://docs.drand.love/developer/API-v2/drand-http-api" target="_blank">API-V2</a>
+            endpoints. An example curl query:
+          </p>
+
+          <code>
+            curl -L 'https://api.drand.sh/v2/beacons/quicknet/rounds/latest' -H 'Accept: application/json'
+          </code>
+
+          <p>
+            The returned json will look like this:
+          </p>
+
+          <pre class="hl"><span class="hl kwa">{</span>
+  <span class="hl kwc">&quot;round&quot;</span><span class="hl opt">:</span> <span class="hl num">33230871</span><span class="hl opt">,</span>
+  <span class="hl kwc">&quot;signature&quot;</span><span class="hl opt">:</span> <span class="hl sng">&quot;977315cfad2327d12f97a145044c6e1bc59c67c89542d5c6dad9fc282ee81faf2ee6128e8968e8c174d709ca13a77ee1&quot;</span><span class="hl opt"></span>
+<span class="hl kwa">}</span>
+</pre>
+
+          <p>
+            The <code>quicknet</code> network's message that is signed is the round number,
+            so we can predict future signed messages. This allows us to use round numbers as identities
+            in Identity Based Encryption, and this what the <code>quicknet</code> network is for.
+          </p>
+
+          <p>
+            By using the round number as the identity when encrypting, the signature becomes the private key
+            to decrypt the encrypted message under Identity Based Encryption. The <code>quicknet</code> network's nodes
+            act as Private Key Generator (PKG),
+            that generates the signature that acts as a private key for decryption. However, we can only encrypt up to
+            32-bytes of data, but we can solve that by encrypting a file key and then encrypt the file using that file
+            key with any encryption method, like AES-GCM.
           </p>
         </div>
       </div>
@@ -235,6 +289,43 @@
       <div class="subsection">
         <h3 class="subsection-title"><i class="icon ph-duotone ph-scroll"></i>Changelog</h3>
         <div class="card card-highlight">
+          <strong><i class="icon ph-duotone ph-tag"></i><a
+              href="https://codeberg.org/raphaeltannous/goTimeLock/src/tag/v0.3.0">v0.3.0</a>:</strong>
+          <ul>
+            <li>
+              <strong>cmd/goTimeLock:</strong>
+              <ul>
+                <li>
+                  Upgrade <a href="https://codeberg.org/raphaeltannous/drand">raphaeltannous/drand/client</a> to v0.2.0
+                  to allow requesting the drand round from multiple endpoints.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>cmd/wasm:</strong>
+              <ul>
+                <li>
+                  Upgrade <a href="https://codeberg.org/raphaeltannous/drand">raphaeltannous/drand/client</a> to v0.2.0
+                  to allow requesting the drand round from multiple endpoints.
+                </li>
+                <li>
+                  Add wasm fetching status.
+                </li>
+                <li>
+                  Update error codes for decryption.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>cmd/goTimeLockPaste:</strong>
+              <ul>
+                <li>
+                  New automatic decryption server.
+                </li>
+              </ul>
+            </li>
+          </ul>
+
           <strong><i class="icon ph-duotone ph-tag"></i><a
               href="https://codeberg.org/raphaeltannous/goTimeLock/src/tag/v0.2.0">v0.2.0</a>:</strong>
           <ul>
